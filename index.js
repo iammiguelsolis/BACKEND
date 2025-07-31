@@ -1,13 +1,12 @@
 const express = require('express')
 const cors = require('cors')
-
+const serverless = require('serverless-http')
+const logger = require('./loggerMiddleware') // sube un nivel
 
 const app = express()
-const logger = require('./loggerMiddleware')
 
 app.use(cors())
 app.use(express.json())
-
 app.use(logger)
 
 let notes = [
@@ -31,47 +30,42 @@ let notes = [
   }
 ]
 
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
+app.get('/', (req, res) => {
+  res.send('<h1>Hello from Vercel</h1>')
 })
 
-app.get('/api/notes', (request, response) => {
-  response.json(notes)
+app.get('/api/notes', (req, res) => {
+  res.json(notes)
 })
 
-app.get('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
+app.get('/api/notes/:id', (req, res) => {
+  const id = Number(req.params.id)
   const note = notes.find(note => note.id === id)
-  if (note) {
-    response.json(note)
-  } else {
-    response.status(404).end()
-  }
+  if (note) res.json(note)
+  else res.status(404).end()
 })
 
-app.delete('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
+app.delete('/api/notes/:id', (req, res) => {
+  const id = Number(req.params.id)
   notes = notes.filter(note => note.id !== id)
-  response.status(204).end()
+  res.status(204).end()
 })
 
-app.post('/api/notes', (request, response) => {
-  const note = request.body
+app.post('/api/notes', (req, res) => {
+  const note = req.body
   if (!note || !note.content) {
-    return response.status(400).json({ error: 'content missing' })
+    return res.status(400).json({ error: 'content missing' })
   }
   const ids = notes.map(note => note.id)
   const maxId = Math.max(...ids)
   const newNote = { ...note, id: maxId + 1 }
   notes = [...notes, newNote]
-  response.json(newNote)
+  res.json(newNote)
 })
 
-app.use((request, response) => {
-  response.status(404).json({ error: 'unknown endpoint' })
+app.use((req, res) => {
+  res.status(404).json({ error: 'unknown endpoint' })
 })
 
-const PORT = 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+// Exporta como función serverless
+module.exports = serverless(app)
