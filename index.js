@@ -5,7 +5,14 @@ const cors = require('cors')
 const app = express()
 const logger = require('./loggerMiddleware')
 
-app.use(cors())
+const corsOptions = {
+  origin: '*', // Puedes restringirlo si quieres
+  methods: ['GET', 'POST', 'DELETE', 'PUT'],
+  allowedHeaders: ['Content-Type']
+}
+
+app.use(cors(corsOptions))
+
 app.use(express.json())
 
 app.use(logger)
