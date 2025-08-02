@@ -3,7 +3,7 @@ const cors = require('cors')
 require('dotenv').config()
 const mongoose = require('mongoose')
 const logger = require('./loggerMiddleware')
-const Note = require('./models/note') // <-- Importamos el modelo
+const Note = require('./models/note')
 
 // Conexión a MongoDB
 const connectionString = process.env.MONGODB_URI
@@ -50,13 +50,20 @@ app.get('/api/notes/:id', async (req, res) => {
 
 // DELETE una nota por ID
 app.delete('/api/notes/:id', async (req, res) => {
+  const id = req.params.id;
+  console.log('🗑️ ID a eliminar:', id);
+
   try {
-    await Note.findByIdAndRemove(req.params.id)
-    res.status(204).end()
+    const deletedNote = await Note.findByIdAndRemove(id);
+    if (!deletedNote) {
+      return res.status(404).json({ error: 'note not found' });
+    }
+    res.status(204).end();
   } catch (error) {
-    res.status(400).json({ error: 'malformatted id' })
+    console.error('❌ Error al eliminar:', error.message);
+    res.status(400).json({ error: 'malformatted id' });
   }
-})
+});
 
 // POST nueva nota
 app.post('/api/notes', async (req, res) => {
