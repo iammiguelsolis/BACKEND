@@ -51,8 +51,13 @@ app.get('/api/notes/:id', async (req, res) => {
 // DELETE una nota por ID
 app.delete('/api/notes/:id', async (req, res) => {
   try {
-    await Note.findByIdAndRemove(req.params.id)
-    res.status(204).end()
+    const note = await Note.findById(req.params.id)
+    if (note) {
+      await Note.findByIdAndRemove(req.params.id)
+      res.status(204).end()
+    } else {
+      res.status(404).end()
+    }
   } catch (error) {
     res.status(400).json({ error: 'malformatted id' })
   }
