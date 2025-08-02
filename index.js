@@ -50,20 +50,13 @@ app.get('/api/notes/:id', async (req, res) => {
 
 // DELETE una nota por ID
 app.delete('/api/notes/:id', async (req, res) => {
-  const id = req.params.id;
-  console.log('🗑️ ID a eliminar:', id);
-
   try {
-    const deletedNote = await Note.findByIdAndRemove(id);
-    if (!deletedNote) {
-      return res.status(404).json({ error: 'note not found' });
-    }
-    res.status(204).end();
+    await Note.findByIdAndRemove(req.params.id)
+    res.status(204).end()
   } catch (error) {
-    console.error('❌ Error al eliminar:', error.message);
-    res.status(400).json({ error: id });
+    res.status(400).json({ error: 'malformatted id' })
   }
-});
+})
 
 // POST nueva nota
 app.post('/api/notes', async (req, res) => {
