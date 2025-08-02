@@ -44,6 +44,7 @@ app.get('/api/notes/:id', async (req, res) => {
     else res.status(404).end()
   } catch (error) {
     res.status(400).json({ error: 'malformatted id' })
+    console.log(req, res)
   }
 })
 
