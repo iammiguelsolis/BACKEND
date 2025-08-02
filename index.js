@@ -53,7 +53,7 @@ app.delete('/api/notes/:id', async (req, res) => {
   try {
     const note = await Note.findById(req.params.id)
     if (note) {
-      await Note.findByIdAndRemove(req.params.id)
+      await Note.findByIdAndDelete(req.params.id)
       res.status(204).end()
     } else {
       res.status(404).end()
