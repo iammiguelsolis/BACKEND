@@ -61,7 +61,7 @@ app.delete('/api/notes/:id', async (req, res) => {
     res.status(204).end();
   } catch (error) {
     console.error('❌ Error al eliminar:', error.message);
-    res.status(400).json({ error: 'malformatted id' });
+    res.status(400).json({ error: id });
   }
 });
 
