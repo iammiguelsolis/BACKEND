@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "test": "dsa"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
@@ -20,5 +20,8 @@
     "mongodb": "^6.18.0",
     "mongoose": "^8.17.0",
     "serverless-http": "^3.2.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }

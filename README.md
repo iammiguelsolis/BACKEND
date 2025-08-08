@@ -83,4 +83,4 @@ ISC
 
 ---
 
-Desarrollado por [tu nombre o usuario de GitHub].
+Desarrollado por [tu nombre o usuario de GitHub]..
